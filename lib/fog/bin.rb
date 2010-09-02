@@ -1,6 +1,7 @@
 require 'fog/credentials'
 
 require 'fog/aws/bin'
+require 'fog/brightbox/bin'
 require 'fog/go_grid/bin'
 require 'fog/linode/bin'
 require 'fog/local/bin'
@@ -25,7 +26,8 @@ module Fog
         ::Slicehost,
         ::Terremark,
         ::Vcloud,
-        ::Bluebox
+        ::Bluebox,
+        ::Brightbox
       ].select {|_module_| _module_.initialized?}
 
     end
