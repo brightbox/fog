@@ -3,6 +3,7 @@ require 'fog/brightbox/models/compute/server'
 require 'fog/brightbox/requests/compute/list_servers'
 require 'fog/brightbox/requests/compute/create_server'
 require 'fog/brightbox/requests/compute/get_server'
+require 'fog/brightbox/requests/compute/destroy_server'
 
 module Brightbox
   class << self
