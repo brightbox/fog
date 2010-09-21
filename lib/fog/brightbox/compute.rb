@@ -16,7 +16,6 @@ module Fog
       request :get_server
 
       class Mock
-        include Collections
 
         def request(options)
           raise "Not implemented"
@@ -24,7 +23,6 @@ module Fog
       end
 
       class Real
-        include Collections
 
         def initialize(options)
           get_oauth_token(options)
