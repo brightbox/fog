@@ -3,11 +3,11 @@ module Fog
     class Compute
       class Real
 
-        def destroy_server(identifier, options = {})
+        def destroy_cloud_ip(identifier, options = {})
           request(
-            :expects  => [202],
+            :expects  => [200],
             :method   => 'DELETE',
-            :path     => "/api/v1/servers/#{identifier}",
+            :path     => "/api/v1/cloud_ips/#{identifier}",
             :headers  => {"Content-Type" => "application/json"},
             :body     => options.to_json
           )
@@ -17,7 +17,7 @@ module Fog
 
       class Mock
 
-        def destroy_server(identifier, options = {})
+        def destroy_cloud_ip(identifier, options = {})
           Fog::Mock.not_implemented
         end
 

@@ -3,11 +3,11 @@ module Fog
     class Compute
       class Real
 
-        def destroy_server(identifier, options = {})
+        def create_user(options = {})
           request(
-            :expects  => [202],
-            :method   => 'DELETE',
-            :path     => "/api/v1/servers/#{identifier}",
+            :expects  => [201],
+            :method   => 'POST',
+            :path     => "/api/v1/users",
             :headers  => {"Content-Type" => "application/json"},
             :body     => options.to_json
           )
@@ -17,7 +17,7 @@ module Fog
 
       class Mock
 
-        def destroy_server(identifier, options = {})
+        def create_user(options = {})
           Fog::Mock.not_implemented
         end
 

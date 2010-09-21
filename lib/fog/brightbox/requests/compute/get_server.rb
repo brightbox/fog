@@ -3,12 +3,13 @@ module Fog
     class Compute
       class Real
 
-        def get_server(identifier)
-          # return nil if identifier.nil? || identifier == ""
+        def get_server(identifier, options = {})
           request(
             :expects  => [200],
             :method   => 'GET',
-            :path     => "/api/v1/servers/#{identifier}"
+            :path     => "/api/v1/servers/#{identifier}",
+            :headers  => {"Content-Type" => "application/json"},
+            :body     => options.to_json
           )
         end
 
@@ -16,7 +17,7 @@ module Fog
 
       class Mock
 
-        def get_server(identifier)
+        def get_server(identifier, options = {})
           Fog::Mock.not_implemented
         end
 

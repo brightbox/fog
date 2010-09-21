@@ -3,11 +3,13 @@ module Fog
     class Compute
       class Real
 
-        def list_servers
+        def list_servers(options = {})
           request(
             :expects  => [200],
             :method   => 'GET',
-            :path     => '/api/v1/servers'
+            :path     => "/api/v1/servers",
+            :headers  => {"Content-Type" => "application/json"},
+            :body     => options.to_json
           )
         end
 
@@ -15,7 +17,7 @@ module Fog
 
       class Mock
 
-        def list_servers
+        def list_servers(options = {})
           Fog::Mock.not_implemented
         end
 

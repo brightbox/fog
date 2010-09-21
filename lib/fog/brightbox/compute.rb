@@ -12,8 +12,50 @@ module Fog
       model :server
 
       request_path 'fog/brightbox/requests/compute'
-      request :list_servers
+      request :close_account
+      request :create_account
+      request :create_api_client
+      request :create_cloud_ip
+      request :create_image
+      request :create_server
+      request :create_users
+      request :destroy_api_client
+      request :destroy_cloud_ip
+      request :destroy_image
+      request :destroy_server
+      request :get_account
+      request :get_api_client
+      request :get_cloud_ip
+      request :get_image
+      request :get_interface
       request :get_server
+      request :get_server_type
+      request :get_user
+      request :get_zone
+      request :list_accounts
+      request :list_api_clients
+      request :list_cloud_ips
+      request :list_images
+      request :list_interfaces
+      request :list_server_types
+      request :list_servers
+      request :list_users
+      request :list_zones
+      request :map_cloud_ip
+      request :rebuild_server
+      request :reset_ftp_password_account
+      request :resize_server
+      request :restart_server
+      request :shutdown_server
+      request :snapshot_server
+      request :start_server
+      request :stop_server
+      request :unmap_cloud_ip
+      request :update_account
+      request :update_api_client
+      request :update_image
+      request :update_server
+      request :update_user
 
       class Mock
 

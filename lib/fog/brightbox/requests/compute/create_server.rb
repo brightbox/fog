@@ -3,7 +3,7 @@ module Fog
     class Compute
       class Real
 
-        def create_server(options)
+        def create_server(options = {})
           request(
             :expects  => [201],
             :method   => 'POST',
@@ -17,7 +17,7 @@ module Fog
 
       class Mock
 
-        def create_server(identifier)
+        def create_server(options = {})
           Fog::Mock.not_implemented
         end
 
