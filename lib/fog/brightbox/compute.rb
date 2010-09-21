@@ -10,6 +10,8 @@ module Fog
       model_path 'fog/brightbox/models/compute'
       collection :servers
       model :server
+      collection :flavors
+      model :flavor
 
       request_path 'fog/brightbox/requests/compute'
       request :close_account
