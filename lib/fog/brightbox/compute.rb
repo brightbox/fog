@@ -12,6 +12,8 @@ module Fog
       model :server
       collection :flavors
       model :flavor
+      collection :images
+      model :image
 
       request_path 'fog/brightbox/requests/compute'
       request :close_account
