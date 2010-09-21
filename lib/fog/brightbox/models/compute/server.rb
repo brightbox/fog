@@ -43,6 +43,16 @@ module Fog
         true
       end
 
+      def flavor
+        requires :flavor_id
+        connection.flavors.get(@flavor_id)
+      end
+
+      def image
+        requires :image_id
+        connection.images.get(@image_id)
+      end
+
       def ready?
         status == 'active'
       end
