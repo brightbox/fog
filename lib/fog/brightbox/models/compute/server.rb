@@ -18,38 +18,10 @@ module Fog
       attribute :resource_type
       attribute :description
 
-      # Singular links
-      [:account, :image, :server_type, :zone].each do |link|
-        attribute link, :squash => "id"
-        # attribute :"#{link}_hash", :aliases => "#{link}", :squash => true
-        # define_method(:"#{link}_id") { self.send(link).respond_to?(:index) ? self.send(link).index("id") : nil }
-        # define_method(link) do
-        #   puts "would do:\nrequires :#{link}_id\nconnection.#{link}.get(@#{link}_id)"
-        # end
-      end
-
+      attribute :account_id, :aliases => "account", :squash => "id"
       attribute :image_id, :aliases => "image", :squash => "id"
       attribute :flavor_id, :aliases => "server_type", :squash => "id"
-
-      # Fog required
-      # def flavor_id
-      #   @flavor_id # ||= attributes["server_type"]["id"]
-      # end
-      # 
-      # def flavor_id=(new_flavor)
-      #   attributes["flavor_id"] = new_flavor
-      #   @flavor_id = new_flavor
-      # end
-      # 
-      # def image_id
-      #   @image_id # ||= attributes["image"]["id"]
-      # end
-      # 
-      # def image_id=(new_image)
-      #   attributes["image_id"] = new_image
-      #   @image_id = new_image
-      # end
-
+      attribute :zone_id, :aliases => "zone", :squash => "id"
 
       # Plural links
       [:images, :cloud_ips, :interfaces].each do |link|
