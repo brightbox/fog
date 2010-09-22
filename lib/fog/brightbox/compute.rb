@@ -22,7 +22,7 @@ module Fog
       request :create_cloud_ip
       request :create_image
       request :create_server
-      request :create_users
+      request :create_user
       request :destroy_api_client
       request :destroy_cloud_ip
       request :destroy_image
