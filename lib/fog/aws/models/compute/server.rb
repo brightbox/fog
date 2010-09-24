@@ -32,6 +32,9 @@ module Fog
         attribute :subnet_id,             :aliases => 'subnetId'
         attribute :user_data
 
+        attr_accessor :password, :username
+        attr_writer   :private_key, :private_key_path, :public_key, :public_key_path
+
         def initialize(attributes={})
           @groups ||= ["default"] unless attributes[:subnet_id]
           @flavor_id ||= 'm1.small'
@@ -57,14 +60,6 @@ module Fog
           true
         end
 
-        # def security_group
-        #   connection.security_groups.all(@group_id)
-        # end
-        #
-        # def security_group=(new_security_group)
-        #   @group_id = new_security_group.name
-        # end
-
         def flavor_id
           @flavor && @flavor.id || @flavor_id
         end
@@ -84,7 +79,7 @@ module Fog
         end
 
         def key_pair=(new_keypair)
-          @key_name = new_keypair.name
+          @key_name = new_keypair && new_keypair.name
         end
 
         def monitoring=(new_monitoring)
@@ -103,6 +98,21 @@ module Fog
           end
         end
 
+        def private_key_path
+          File.expand_path(@private_key_path ||= Fog.credentials[:private_key_path])
+        end
+
+        def private_key
+          @private_key ||= File.read(private_key_path)
+        end
+
+        def public_key_path
+          File.expand_path(@public_key_path ||= Fog.credentials[:public_key_path])
+        end
+
+        def public_key
+          @public_key ||= File.read(public_key_path)
+        end
         def ready?
           @state == 'running'
         end
@@ -117,18 +127,18 @@ module Fog
           requires :image_id
 
           options = {
-            'BlockDeviceMapping'          => @block_device_mapping,
+            'BlockDeviceMapping'          => block_device_mapping,
             'InstanceType'                => flavor_id,
-            'KernelId'                    => @kernel_id,
-            'KeyName'                     => @key_name,
-            'Monitoring.Enabled'          => @monitoring,
-            'Placement.AvailabilityZone'  => @availability_zone,
-            'RamdiskId'                   => @ramdisk_id,
-            'SecurityGroup'               => @groups,
+            'KernelId'                    => kernel_id,
+            'KeyName'                     => key_name,
+            'Monitoring.Enabled'          => monitoring,
+            'Placement.AvailabilityZone'  => availability_zone,
+            'RamdiskId'                   => ramdisk_id,
+            'SecurityGroup'               => groups,
             'SubnetId'                    => subnet_id,
-            'UserData'                    => @user_data
+            'UserData'                    => user_data
           }
-          
+
           # If subnet is defined we are working on a virtual private cloud.
           # subnet & security group cannot co-exist. I wish VPC just ignored
           # the security group parameter instead, it would be much easier!
@@ -138,9 +148,29 @@ module Fog
             options.delete('SubnetId')
           end
 
-          data = connection.run_instances(@image_id, 1, 1, options)
+          data = connection.run_instances(image_id, 1, 1, options)
           merge_attributes(data.body['instancesSet'].first)
           true
+        end
+
+        def setup(credentials = {})
+          requires :identity, :ip_address, :public_key, :username
+          sleep(10) # takes a bit before EC2 instances will play nice
+          Fog::SSH.new(ip_address, username, credentials).run([
+            %{mkdir .ssh},
+            %{echo "#{public_key}" >> ~/.ssh/authorized_keys},
+            %{passwd -l root},
+            %{echo "#{attributes.to_json}" >> ~/attributes.json}
+          ])
+        rescue Errno::ECONNREFUSED => e
+          sleep(1)
+          retry
+        end
+
+        def ssh(commands)
+          requires :identity, :ip_address, :private_key, :username
+          @ssh ||= Fog::SSH.new(ip_address, username, :key_data => [private_key])
+          @ssh.run(commands)
         end
 
         def start
@@ -153,6 +183,10 @@ module Fog
           requires :id
           connection.stop_instances(@id)
           true
+        end
+
+        def username
+          @username ||= 'root'
         end
 
         def volumes
