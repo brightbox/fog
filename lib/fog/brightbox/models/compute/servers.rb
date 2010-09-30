@@ -5,17 +5,9 @@ module Fog
   module Brightbox
     class Compute
 
-      module Collections
-        def servers(attributes={})
-          Fog::Brightbox::Compute.new({
-            :connection => self
-          }.merge!(attributes))
-        end
-      end
-
       class Servers < Fog::Collection
 
-        model Fog::Brightbox::Server
+        model Fog::Brightbox::Compute::Server
 
         def all
           # get list of servers
