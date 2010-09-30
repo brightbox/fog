@@ -5,7 +5,7 @@ module Fog
 
         def create_server(options = {})
           request(
-            :expects  => [201],
+            :expects  => [202],
             :method   => 'POST',
             :path     => "/api/v1/servers",
             :headers  => {"Content-Type" => "application/json"},
