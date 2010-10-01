@@ -12,8 +12,9 @@ module Fog
         attribute :name
         attribute :status
         attribute :source
+        attribute :source_type
 
-        attribute :ancestor_image
+        attribute :ancestor_id, :aliases => "ancestor", :squash => "id"
         attribute :arch
 
         attribute :resource_type
@@ -22,6 +23,7 @@ module Fog
         attribute :official, :type => :boolean
         attribute :virtual_size
         attribute :disk_size
+        attribute :created_at
 
       end
 
