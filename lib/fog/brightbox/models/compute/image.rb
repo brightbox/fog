@@ -19,8 +19,8 @@ module Fog
 
         attribute :resource_type
         attribute :description
-        attribute :public, :type => :boolean
-        attribute :official, :type => :boolean
+        attribute :public
+        attribute :official
         attribute :virtual_size
         attribute :disk_size
         attribute :created_at
