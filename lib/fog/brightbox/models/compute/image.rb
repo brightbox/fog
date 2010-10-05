@@ -15,6 +15,7 @@ module Fog
         attribute :source_type
 
         attribute :ancestor_id, :aliases => "ancestor", :squash => "id"
+        attribute :owner_id, :aliases => "owner", :squash => "id"
         attribute :arch
 
         attribute :resource_type
