@@ -26,7 +26,7 @@ module Fog
         attribute :zone_id, :aliases => "zone", :squash => "id"
 
         # Plural links
-        [:images, :cloud_ips, :interfaces].each do |link|
+        [:snapshots, :cloud_ips, :interfaces].each do |link|
           attribute link
           # attribute :"#{link}_hash", :aliases => "#{link}"
           # define_method(link) do
