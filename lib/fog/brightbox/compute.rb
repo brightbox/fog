@@ -16,6 +16,8 @@ module Fog
       model :image
       collection :zones
       model :zone
+      collection :cloud_ips
+      model :cloud_ip
 
       request_path 'fog/brightbox/requests/compute'
       request :close_account
