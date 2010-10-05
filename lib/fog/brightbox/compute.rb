@@ -20,13 +20,11 @@ module Fog
       model :cloud_ip
 
       request_path 'fog/brightbox/requests/compute'
-      request :close_account
       request :create_account
       request :create_api_client
       request :create_cloud_ip
       request :create_image
       request :create_server
-      request :create_user
       request :destroy_api_client
       request :destroy_cloud_ip
       request :destroy_image
@@ -44,7 +42,6 @@ module Fog
       request :list_api_clients
       request :list_cloud_ips
       request :list_images
-      request :list_interfaces
       request :list_server_types
       request :list_servers
       request :list_users
