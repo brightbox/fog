@@ -61,7 +61,13 @@ module Fog
 
         def save
           requires :image_id
-          options = { :server_type => @flavor_id, :image => @image_id }.delete_if {|k,v| v.nil? || v == "" }
+          options = {
+            :image => @image_id,
+            :server_type => @flavor_id,
+            :name => @name,
+            :zone => @zone_id,
+            :user_data => @user_data
+          }.delete_if {|k,v| v.nil? || v == "" }
           response = connection.create_server(options)
           data = JSON.parse(response.body)
           merge_attributes(data)
