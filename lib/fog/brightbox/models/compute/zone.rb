@@ -9,7 +9,7 @@ module Fog
         identity :id
 
         attribute :url
-        attribute :name
+        attribute :handle
         attribute :status
         attribute :resource_type
         attribute :description

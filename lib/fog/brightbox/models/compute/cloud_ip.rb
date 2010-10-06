@@ -18,7 +18,7 @@ module Fog
         attribute :public_ip
 
         attribute :account_id, :aliases => "account", :squash => "id"
-        attribute :interface_id, :aliases => "destination", :squash => "id"
+        attribute :interface_id, :aliases => "interface", :squash => "id"
         attribute :server_id, :aliases => "server", :squash => "id"
 
         def map(interface_to_map)

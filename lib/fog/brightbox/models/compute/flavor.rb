@@ -12,6 +12,7 @@ module Fog
         attribute :name
         attribute :status
         # Need to convert units into standardised Fogs values
+        attribute :handle
         attribute :bits
         attribute :cores
         attribute :disk, :aliases => "disk_size"
