@@ -22,6 +22,11 @@ module Fog
           nil
         end
 
+        def allocate
+          data = JSON.parse(connection.create_cloud_ip.body)
+          new(data)
+        end
+
       end
 
     end
