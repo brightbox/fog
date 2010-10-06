@@ -23,7 +23,7 @@ module Fog
 
         def map(interface_to_map)
           requires :identity
-          connection.map_cloud_ip(identity, :destination => interface_to_map)
+          connection.map_cloud_ip(identity, :interface => interface_to_map)
         end
 
         def unmap
