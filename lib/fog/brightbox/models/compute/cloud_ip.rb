@@ -21,6 +21,16 @@ module Fog
         attribute :interface_id, :aliases => "destination", :squash => "id"
         attribute :server_id, :aliases => "server", :squash => "id"
 
+        def map(interface_to_map)
+          requires :identity
+          connection.map_cloud_ip(identity, :destination => interface_to_map)
+        end
+
+        def unmap
+          requires :identity
+          connection.unmap_cloud_ip(identity)
+        end
+
       end
 
     end
