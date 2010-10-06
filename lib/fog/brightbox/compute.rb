@@ -2,8 +2,8 @@ module Fog
   module Brightbox
     class Compute < Fog::Service
 
-      AUTHENTICATION_URL = "https://auth.api.brightbox.com/token"
-      API_URL = "https://api.brightbox.com/"
+      AUTHENTICATION_URL = "https://auth.api.gb1.brightbox.com/token"
+      API_URL = "https://api.gb1.brightbox.com/"
 
       requires :brightbox_client_id, :brightbox_secret
 
