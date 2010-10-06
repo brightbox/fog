@@ -7,7 +7,7 @@ module Fog
           request(
             :expects  => [200],
             :method   => 'POST',
-            :path     => "/api/v1/accounts/#{identifier}/reset_ftp_password",
+            :path     => "/1.0/accounts/#{identifier}/reset_ftp_password",
             :headers  => {"Content-Type" => "application/json"},
             :body     => options.to_json
           )

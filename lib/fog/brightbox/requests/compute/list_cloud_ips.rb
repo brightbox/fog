@@ -7,7 +7,7 @@ module Fog
           request(
             :expects  => [200],
             :method   => 'GET',
-            :path     => "/api/v1/cloud_ips",
+            :path     => "/1.0/cloud_ips",
             :headers  => {"Content-Type" => "application/json"},
             :body     => options.to_json
           )

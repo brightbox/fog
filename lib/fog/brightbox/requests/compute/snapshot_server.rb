@@ -7,7 +7,7 @@ module Fog
           request(
             :expects  => [202],
             :method   => 'POST',
-            :path     => "/api/v1/servers/#{identifier}/snapshot",
+            :path     => "/1.0/servers/#{identifier}/snapshot",
             :headers  => {"Content-Type" => "application/json"},
             :body     => options.to_json
           )
