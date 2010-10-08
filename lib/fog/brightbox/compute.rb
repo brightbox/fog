@@ -18,6 +18,8 @@ module Fog
       model :zone
       collection :cloud_ips
       model :cloud_ip
+      collection :users
+      model :user
 
       request_path 'fog/brightbox/requests/compute'
       request :create_account
