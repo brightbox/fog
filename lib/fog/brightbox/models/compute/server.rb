@@ -39,6 +39,24 @@ module Fog
           raise "Not implemented"
         end
 
+        def start
+          requires :identity
+          connection.start_server(identity)
+          true
+        end
+
+        def stop
+          requires :identity
+          connection.stop_server(identity)
+          true
+        end
+
+        def shutdown
+          requires :identity
+          connection.shutdown_server(identity)
+          true
+        end
+
         def destroy
           requires :identity
           connection.destroy_server(identity)
