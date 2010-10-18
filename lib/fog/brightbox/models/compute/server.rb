@@ -34,9 +34,10 @@ module Fog
           # end
         end
 
-        def reboot
+        def reboot(type = "soft")
           requires :identity
-          raise "Not implemented"
+          connection.restart_server(identity, :type => type)
+          true
         end
 
         def start
