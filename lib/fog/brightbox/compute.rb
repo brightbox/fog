@@ -74,9 +74,9 @@ module Fog
       class Real
 
         def initialize(options)
-          get_oauth_token(options)
-          api_url = options[:brightbox_api_url] || Fog.credentials[:brightbox_api_url] || API_URL
-          @connection = Fog::Connection.new(api_url)
+          @auth_url = options[:brightbox_auth_url] || Fog.credentials[:brightbox_auth_url] || AUTHENTICATION_URL
+          @api_url = options[:brightbox_api_url] || Fog.credentials[:brightbox_api_url] || API_URL
+          @connection = Fog::Connection.new(@api_url)
         end
 
         def request(params)
@@ -91,9 +91,9 @@ module Fog
 
       private
         def get_oauth_token(options = {})
-          @brightbox_client_id ||= options[:brightbox_client_id]
-          @brightbox_secret ||= options[:brightbox_secret]
-          auth_url = options[:brightbox_auth_url] || Fog.credentials[:brightbox_auth_url] || AUTHENTICATION_URL
+          @brightbox_client_id ||= (options[:brightbox_client_id] || Fog.credentials[:brightbox_client_id])
+          @brightbox_secret ||= (options[:brightbox_secret] || Fog.credentials[:brightbox_secret])
+          auth_url = options[:brightbox_auth_url] || @auth_url
 
           connection = Fog::Connection.new(auth_url)
           @authentication_body = {'client_id' => @brightbox_client_id, 'grant_type' => 'none'}.to_json
