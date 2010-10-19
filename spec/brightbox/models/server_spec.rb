@@ -6,7 +6,7 @@ describe 'Fog::Brightbox::Compute::Server' do
   it_should_behave_like "Server"
 
   subject {
-    @image_id   = 'img-1mioz' # ubuntu-lucid-32-base
+    @image_id = "img-9vxqi" # Ubuntu Maverick 10.10 server
     @server = @servers.new(:image_id => @image_id)
   }
 
