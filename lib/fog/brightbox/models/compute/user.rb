@@ -23,7 +23,8 @@ module Fog
 
           options = {
             :email_address => @email_address,
-            :ssh_key => @ssh_key
+            :ssh_key => @ssh_key,
+            :name => @name
           }
 
           response = connection.update_user(identity, options)
