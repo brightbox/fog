@@ -26,6 +26,12 @@ module Fog
         attribute :disk_size
         attribute :created_at
 
+        def destroy
+          requires :identity
+          connection.destroy_image(identity)
+          true
+        end
+
       end
 
     end
