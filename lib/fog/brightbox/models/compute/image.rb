@@ -26,6 +26,20 @@ module Fog
         attribute :disk_size
         attribute :created_at
 
+        def save
+          requires :source, :arch
+          options = {
+            :source => @source,
+            :arch => @arch,
+            :name => @name,
+            :description => @description
+          }.delete_if {|k,v| v.nil? || v == "" }
+          response = connection.create_image(options)
+          data = JSON.parse(response.body)
+          merge_attributes(data)
+          true
+        end
+
         def destroy
           requires :identity
           connection.destroy_image(identity)
