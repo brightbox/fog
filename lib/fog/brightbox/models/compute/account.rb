@@ -26,10 +26,11 @@ module Fog
         attribute :limits_cloudips
         attribute :library_ftp_host
         attribute :library_ftp_user
+        # This is always returned as null/nil unless performing a reset_ftp_password request
+        attribute :library_ftp_password
         attribute :created_at
 
-        # This is always returned as null/nil unless performing a reset_ftp_password request
-        ignore_attributes :library_ftp_password
+
 
         attribute :owner_id, :aliases => "owner", :squash => "id"
         attribute :clients
