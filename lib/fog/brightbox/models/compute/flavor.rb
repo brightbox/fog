@@ -16,7 +16,6 @@ module Fog
         attribute :bits
         attribute :cores
         attribute :disk, :aliases => "disk_size"
-        attribute :name
         attribute :ram
 
         attribute :resource_type
