@@ -38,6 +38,12 @@ module Fog
         attribute :users
         attribute :zones
 
+        def reset_ftp_password
+          requires :identity
+          response = connection.reset_ftp_password_account(identity)
+          JSON.parse(response.body)["library_ftp_password"]
+        end
+
       end
 
     end
