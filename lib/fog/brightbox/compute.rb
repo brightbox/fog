@@ -8,6 +8,7 @@ module Fog
       requires :brightbox_client_id, :brightbox_secret
 
       model_path 'fog/brightbox/models/compute'
+      model :account # Singluar resource, no collection
       collection :servers
       model :server
       collection :flavors
