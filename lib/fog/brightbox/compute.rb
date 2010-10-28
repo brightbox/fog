@@ -91,6 +91,10 @@ module Fog
           response
         end
 
+        def account
+          Fog::Brightbox::Compute::Account.new(JSON.parse(get_account.body))
+        end
+
       private
         def get_oauth_token(options = {})
           auth_url = options[:brightbox_auth_url] || @auth_url
