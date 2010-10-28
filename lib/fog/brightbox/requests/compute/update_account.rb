@@ -3,11 +3,11 @@ module Fog
     class Compute
       class Real
 
-        def update_account(identifier, options = {})
+        def update_account(options = {})
           request(
             :expects  => [200],
             :method   => 'PUT',
-            :path     => "/1.0/accounts/#{identifier}",
+            :path     => "/1.0/account",
             :headers  => {"Content-Type" => "application/json"},
             :body     => options.to_json
           )
@@ -17,7 +17,7 @@ module Fog
 
       class Mock
 
-        def update_account(identifier, options = {})
+        def update_account(options = {})
           Fog::Mock.not_implemented
         end
 

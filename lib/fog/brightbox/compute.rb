@@ -8,7 +8,7 @@ module Fog
       requires :brightbox_client_id, :brightbox_secret
 
       model_path 'fog/brightbox/models/compute'
-      model :account # Singluar resource, no collection
+      model :account # Singular resource, no collection
       collection :servers
       model :server
       collection :flavors
@@ -23,7 +23,6 @@ module Fog
       model :user
 
       request_path 'fog/brightbox/requests/compute'
-      request :create_account
       request :create_api_client
       request :create_cloud_ip
       request :create_image
@@ -41,7 +40,6 @@ module Fog
       request :get_server_type
       request :get_user
       request :get_zone
-      request :list_accounts
       request :list_api_clients
       request :list_cloud_ips
       request :list_images
