@@ -31,6 +31,11 @@ module Fog
           connection.unmap_cloud_ip(identity)
         end
 
+        def destroy
+          requires :identity
+          connection.destroy_cloud_ip(identity)
+        end
+
       end
 
     end
