@@ -72,6 +72,7 @@ module Fog
       class Real
 
         def initialize(options)
+          require "json"
           # Currently authentication and api endpoints are the same but may change
           @auth_url = options[:brightbox_auth_url] || Fog.credentials[:brightbox_auth_url] || API_URL
           @api_url = options[:brightbox_api_url] || Fog.credentials[:brightbox_api_url] || API_URL

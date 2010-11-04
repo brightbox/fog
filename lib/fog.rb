@@ -1,14 +1,8 @@
 require 'rubygems'
 require 'base64'
 require 'cgi'
-require 'digest/md5'
 require 'excon'
 require 'formatador'
-require 'json'
-require 'mime/types'
-require 'net/ssh'
-require 'nokogiri'
-require 'tempfile'
 require 'time'
 
 __DIR__ = File.dirname(__FILE__)
@@ -24,7 +18,7 @@ module Fog
   @mocking = false
 
   unless const_defined?(:VERSION)
-    VERSION = '0.3.13'
+    VERSION = '0.3.14'
   end
 
   module Mock
@@ -50,10 +44,6 @@ module Fog
 
   def self.bin=(new_bin)
     @bin = new_bin
-  end
-
-  def self.credentials
-    {}
   end
 
   def self.mock!
