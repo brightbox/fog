@@ -32,7 +32,7 @@ require 'fog/ssh'
 module Fog
 
   unless const_defined?(:VERSION)
-    VERSION = '0.3.1'
+    VERSION = '0.3.2'
   end
 
   module Mock
@@ -95,3 +95,4 @@ require 'fog/rackspace'
 require 'fog/slicehost'
 require 'fog/terremark'
 require 'fog/vcloud'
+require 'fog/google'
