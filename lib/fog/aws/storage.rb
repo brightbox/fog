@@ -120,7 +120,7 @@ module Fog
         # Initialize connection to S3
         #
         # ==== Notes
-        # options parameter must include values for :aws_access_key_id and 
+        # options parameter must include values for :aws_access_key_id and
         # :aws_secret_access_key in order to create a connection
         #
         # ==== Examples
@@ -165,8 +165,16 @@ module Fog
         def request(params, &block)
           params[:headers]['Date'] = Time.now.utc.strftime("%a, %d %b %Y %H:%M:%S +0000")
           params[:headers]['Authorization'] = "AWS #{@aws_access_key_id}:#{signature(params)}"
+          params[:expects] = [307, *params[:expects]].flatten
+          # FIXME: ToHashParser should make this not needed
+          original_params = params.dup
 
           response = @connection.request(params, &block)
+
+          if response.status == 307
+            uri = URI.parse(response.headers['Location'])
+            response = Fog::Connection.new("#{@scheme}://#{uri.host}:#{@port}", false).request(original_params, &block)
+          end
 
           response
         end
