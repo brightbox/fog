@@ -1,4 +1,4 @@
-require 'fog/model'
+require 'fog/core/model'
 
 module Fog
   module Rackspace
@@ -8,8 +8,6 @@ module Fog
 
         identity :id
 
-        attribute :bits
-        attribute :cores
         attribute :disk
         attribute :name
         attribute :ram

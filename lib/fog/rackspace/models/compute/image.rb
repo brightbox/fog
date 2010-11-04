@@ -1,4 +1,4 @@
-require 'fog/model'
+require 'fog/core/model'
 
 module Fog
   module Rackspace
@@ -33,6 +33,7 @@ module Fog
         end
 
         def save
+          raise Fog::Errors::Error.new('Resaving an existing object may create a duplicate') if identity
           requires :server_id
 
           data = connection.create_image(@server_id, 'name' => name)

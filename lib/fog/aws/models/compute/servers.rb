@@ -1,4 +1,4 @@
-require 'fog/collection'
+require 'fog/core/collection'
 require 'fog/aws/models/compute/server'
 
 module Fog
@@ -7,18 +7,24 @@ module Fog
 
       class Servers < Fog::Collection
 
+        attribute :filters
+
         attribute :server_id
 
         model Fog::AWS::Compute::Server
 
         def initialize(attributes)
-          @server_id ||= []
+          @filters ||= {}
           super
         end
 
-        def all(server_id = @server_id)
-          @server_id = server_id
-          data = connection.describe_instances(server_id).body
+        def all(filters = @filters)
+          unless filters.is_a?(Hash)
+            Formatador.display_line("[yellow][WARN] all with #{filters.class} param is deprecated, use all('instance-id' => []) instead[/] [light_black](#{caller.first})[/]")
+            filters = {'instance-id' => [*filters]}
+          end
+          @filters = filters
+          data = connection.describe_instances(filters).body
           load(
             data['reservationSet'].map do |reservation|
               reservation['instancesSet'].map do |instance|
@@ -42,13 +48,13 @@ module Fog
 
           # make sure port 22 is open in the first security group
           security_group = connection.security_groups.get(server.groups.first)
-          ip_permission = security_group.ip_permissions.detect do |ip_permission|
+          authorized = security_group.ip_permissions.detect do |ip_permission|
             ip_permission['ipRanges'].first && ip_permission['ipRanges'].first['cidrIp'] == '0.0.0.0/0' &&
             ip_permission['fromPort'] == 22 &&
             ip_permission['ipProtocol'] == 'tcp' &&
             ip_permission['toPort'] == 22
           end
-          unless ip_permission
+          unless authorized
             security_group.authorize_port_range(22..22)
           end
 
@@ -60,7 +66,7 @@ module Fog
 
         def get(server_id)
           if server_id
-            all(server_id).first
+            self.class.new(:connection => connection).all('instance-id' => server_id).first
           end
         rescue Fog::Errors::NotFound
           nil

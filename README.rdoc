@@ -2,6 +2,12 @@ http://geemus.com/fog.png
 
 fog is the Ruby cloud computing library.
 
+################################################################################
+
+Thursday, October 14, 2010 10:00 am PST, hear it straight from {geemus}[http://github.com/geemus] in the {fog webinar}[http://pages.engineyard.com/FogWebinar.html]
+
+################################################################################
+
 The quick and dirty, top to bottom:
 * Collections provide a simplified interface, making clouds easier to work with and switch between.
 * Requests allow power users to get the most out of the features of each individual cloud.
@@ -112,7 +118,7 @@ Enjoy, and let me know what I can do to continue improving fog!
 * Discuss in irc on the {#ruby-fog}[irc://irc.freenode.net/ruby-fog] channel on Freenode or via email on the {mailing list}[http://groups.google.com/group/ruby-fog]
 * See upcoming work in the {tracker}[http://www.pivotaltracker.com/projects/54635]
 * Report bugs in {issues}[http://github.com/geemus/fog/issues]
-* Learn about {contributing}[http://wiki.github.com/geemus/fog/contributors-guide]
+* Learn about {contributing}[http://github.com/geemus/fog/wiki/contributor-guide] or find more info about the {Providers}[http://github.com/geemus/fog/wiki/Providers] (including some todo items)
 * See what already uses fog and add your own stuff to {the list}[http://wiki.github.com/geemus/fog/in-the-wild]
 
 == Copyright

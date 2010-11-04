@@ -30,7 +30,12 @@ module Fog
       class Mock
 
         def grid_image_list(options={})
-          Fog::Mock.not_implemented
+          #response = Excon::Response.new
+
+          #images = @data[:list].values
+          #for image in images
+          #  case image['state']
+          #  when 'Available'
         end
 
       end

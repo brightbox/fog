@@ -1,4 +1,4 @@
-require 'fog/collection'
+require 'fog/core/collection'
 require 'fog/aws/models/compute/address'
 
 module Fog
@@ -7,19 +7,23 @@ module Fog
 
       class Addresses < Fog::Collection
 
-        attribute :public_ip
+        attribute :filters
         attribute :server
 
         model Fog::AWS::Compute::Address
 
         def initialize(attributes)
-          @public_ip ||= []
+          @filters ||= {}
           super
         end
 
-        def all(public_ip = @public_ip)
-          @public_ip = public_ip
-          data = connection.describe_addresses(public_ip).body
+        def all(filters = @filters)
+          unless filters.is_a?(Hash)
+            Formatador.display_line("[yellow][WARN] all with #{filters.class} param is deprecated, use all('public-ip' => []) instead[/] [light_black](#{caller.first})[/]")
+            filters = {'public-ip' => [*filters]}
+          end
+          @filters = filters
+          data = connection.describe_addresses(filters).body
           load(
             data['addressesSet'].map do |address|
               address.reject {|key, value| value.nil? || value.empty? }
@@ -33,10 +37,8 @@ module Fog
 
         def get(public_ip)
           if public_ip
-            all(public_ip).first
+            self.class.new(:connection => connection).all('public-ip' => public_ip).first
           end
-        rescue Fog::Errors::NotFound
-          nil
         end
 
         def new(attributes = {})

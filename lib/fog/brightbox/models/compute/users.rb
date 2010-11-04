@@ -1,4 +1,4 @@
-require 'fog/collection'
+require 'fog/core/collection'
 require 'fog/brightbox/models/compute/user'
 
 module Fog

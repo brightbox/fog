@@ -1,4 +1,4 @@
-require 'fog/model'
+require 'fog/core/model'
 
 module Fog
   module AWS
@@ -18,6 +18,7 @@ module Fog
         attribute :size
         attribute :snapshot_id,       :aliases => 'snapshotId'
         attribute :state,             :aliases => 'status'
+        attribute :tags,              :aliases => 'tagSet'
 
         def initialize(attributes = {})
           # assign server first to prevent race condition with new_record?
@@ -36,15 +37,8 @@ module Fog
           state == 'available'
         end
 
-        def server=(new_server)
-          if new_server
-            attach(new_server)
-          else
-            detach
-          end
-        end
-
         def save
+          raise Fog::Errors::Error.new('Resaving an existing object may create a duplicate') if identity
           requires :availability_zone, :size
 
           data = connection.create_volume(@availability_zone, @size, @snapshot_id).body
@@ -56,9 +50,16 @@ module Fog
           true
         end
 
+        def server=(new_server)
+          if new_server
+            attach(new_server)
+          else
+            detach
+          end
+        end
+
         def snapshots
           requires :id
-
           connection.snapshots(:volume => self)
         end
 

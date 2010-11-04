@@ -1,5 +1,5 @@
 require 'fog'
-require 'fog/bin'
+require 'fog/core/bin'
 Fog.bin = true
 
 require File.expand_path(File.join(File.dirname(__FILE__), 'helpers', 'model_helper'))
@@ -15,6 +15,10 @@ module Fog
 end
 FalseClass.send(:include, Fog::Boolean)
 TrueClass.send(:include, Fog::Boolean)
+
+def lorem_file
+  File.open(File.dirname(__FILE__) + '/lorem.txt', 'r')
+end
 
 module Shindo
   class Tests

@@ -1,4 +1,4 @@
-require 'fog/collection'
+require 'fog/core/collection'
 require 'fog/aws/models/compute/snapshot'
 
 module Fog
@@ -7,26 +7,23 @@ module Fog
 
       class Snapshots < Fog::Collection
 
-        attribute :owner,         :aliases => 'Owner'
-        attribute :restorable_by, :aliases => 'RestorableBy'
-        attribute :snapshot_id
+        attribute :filters
         attribute :volume
 
         model Fog::AWS::Compute::Snapshot
 
         def initialize(attributes)
-          @snapshot_id ||= []
+          @filters ||= { 'RestorableBy' => 'self' }
           super
         end
 
-        def all(snapshot_id = @snapshot_id, options = {})
-          options = {
-            'Owner' => @owner || 'self',
-            'RestorableBy' => @restorable_by
-          }
-          options = options.reject {|key,value| value.nil? || value.to_s.empty?}
-          merge_attributes(options)
-          data = connection.describe_snapshots(snapshot_id).body
+        def all(filters = @filters, options = {})
+          unless filters.is_a?(Hash)
+            Formatador.display_line("[yellow][WARN] all with #{filters.class} param is deprecated, use all('snapshot-id' => []) instead[/] [light_black](#{caller.first})[/]")
+            filters = {'snapshot-id' => [*filters]}
+          end
+          @filters = filters
+          data = connection.describe_snapshots(filters.merge!(options)).body
           load(data['snapshotSet'])
           if volume
             self.replace(self.select {|snapshot| snapshot.volume_id == volume.id})
@@ -36,10 +33,8 @@ module Fog
 
         def get(snapshot_id)
           if snapshot_id
-            all(snapshot_id).first
+            self.class.new(:connection => connection).all('snapshot-id' => snapshot_id).first
           end
-        rescue Fog::Errors::NotFound
-          nil
         end
 
         def new(attributes = {})

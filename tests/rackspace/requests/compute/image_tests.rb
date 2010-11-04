@@ -4,13 +4,12 @@ Shindo.tests('Rackspace::Compute | image requests', ['rackspace']) do
     'id'        => Integer,
     'name'      => String,
     'status'    => String,
-    'updated'   => String
+    'updated'   => String,
   }
 
   @image_format = @images_format.merge({
     'created'  => String,
     'progress' => Integer,
-    'serverId'  => Integer,
   })
 
   tests('success') do
@@ -19,15 +18,18 @@ Shindo.tests('Rackspace::Compute | image requests', ['rackspace']) do
     @server.wait_for { ready? }
     @image_id = nil
 
-    tests("#create_image(#{@server.id})").formats(@images_format) do
+    tests("#create_image(#{@server.id})").formats(@images_format.merge('serverId' => Integer)) do
       data = Rackspace[:compute].create_image(@server.id).body['image']
       @image_id = data['id']
       data
     end
 
-    Rackspace[:compute].images.get(@image_id).wait_for { ready? }
+    unless Fog.mocking?
+      Rackspace[:compute].images.get(@image_id).wait_for { ready? }
+    end
 
     tests("#get_image_details(#{@image_id})").formats(@image_format) do
+      pending if Fog.mocking?
       Rackspace[:compute].get_image_details(@image_id).body['image']
     end
 
@@ -39,7 +41,12 @@ Shindo.tests('Rackspace::Compute | image requests', ['rackspace']) do
       Rackspace[:compute].list_images_detail.body
     end
 
+    unless Fog.mocking?
+      Rackspace[:compute].images.get(@image_id).wait_for { ready? }
+    end
+
     tests("#delete_image(#{@image_id})").succeeds do
+      pending if Fog.mocking? # because it will fail without the wait just above here, which won't work
       Rackspace[:compute].delete_image(@image_id)
     end
 
@@ -54,6 +61,7 @@ Shindo.tests('Rackspace::Compute | image requests', ['rackspace']) do
     end
 
     tests('#get_image_details(0)').raises(Fog::Rackspace::Compute::NotFound) do
+      pending if Fog.mocking?
       Rackspace[:compute].get_image_details(0)
     end
 

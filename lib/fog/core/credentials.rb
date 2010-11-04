@@ -36,6 +36,8 @@ module Fog
   :bluebox_customer_id:   INTENTIONALLY_LEFT_BLANK
   :brightbox_client_id:   INTENTIONALLY_LEFT_BLANK
   :brightbox_secret:      INTENTIONALLY_LEFT_BLANK
+  :go_grid_api_key:       INTENTIONALLY_LEFT_BLANK
+  :go_grid_shared_secret: INTENTIONALLY_LEFT_BLANK
   :local_root:            INTENTIONALLY_LEFT_BLANK
   :new_servers_password:  INTENTIONALLY_LEFT_BLANK
   :new_servers_username:  INTENTIONALLY_LEFT_BLANK

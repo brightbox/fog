@@ -34,7 +34,7 @@ module Fog
         #     default is 'm1.small'
         #   * 'KernelId'<~String> - Id of kernel with which to launch
         #   * 'KeyName'<~String> - Name of a keypair to add to booting instances
-        #   * 'Monitoring.Enabled'<~Boolean> - Enables monitoring, defaults to 
+        #   * 'Monitoring.Enabled'<~Boolean> - Enables monitoring, defaults to
         #     disabled
         #   * 'RamdiskId'<~String> - Id of ramdisk with which to launch
         #   * 'UserData'<~String> -  Additional data to provide to booting instances
@@ -87,17 +87,21 @@ module Fog
               end
             end
           end
-          if security_groups = [*options.delete('SecurityGroup')]
-            options.merge!(AWS.indexed_param('SecurityGroup', security_groups))
+          if security_groups = options.delete('SecurityGroup')
+            options.merge!(AWS.indexed_param('SecurityGroup', [*security_groups]))
           end
           if options['UserData']
             options['UserData'] = Base64.encode64(options['UserData'])
           end
+
+          idempotent = !(options['ClientToken'].nil? || options['ClientToken'].empty?)
+
           request({
             'Action'    => 'RunInstances',
             'ImageId'   => image_id,
             'MinCount'  => min_count,
             'MaxCount'  => max_count,
+            :idempotent => idempotent,
             :parser     => Fog::Parsers::AWS::Compute::RunInstances.new
           }.merge!(options))
         end
@@ -119,6 +123,7 @@ module Fog
             instance = {
               'amiLaunchIndex'      => i,
               'blockDeviceMapping'  => [],
+              'clientToken'         => options['clientToken'],
               'dnsName'             => nil,
               'imageId'             => image_id,
               'instanceId'          => instance_id,
@@ -142,6 +147,8 @@ module Fog
               'ownerId'             => @owner_id,
               'privateIpAddress'    => nil,
               'reservationId'       => reservation_id,
+              'stateReason'         => {},
+              'tagSet'              => {}
             })
           end
           response.body = {

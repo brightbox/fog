@@ -31,6 +31,7 @@ module Fog
     class UnsupportedVersion < Exception ; end
 
     module Shared
+      attr_reader :versions_uri
 
       def default_organization_uri
         @default_organization_uri ||= begin
@@ -80,9 +81,6 @@ module Fog
     class Real
       include Shared
       extend Fog::Vcloud::Generators
-
-      attr_accessor :login_uri
-      attr_reader :versions_uri
 
       def supporting_versions
         ["0.8"]
@@ -295,6 +293,14 @@ module Fog
                   :storage => { :used => "105", :allocated => "200" },
                   :cpu => { :allocated => "10000" },
                   :memory => { :allocated => "20480" },
+                  :catalog => {
+                     :name => "The catalog",
+                     :items => [
+                        { :id => "0", :name => "Item 0" },
+                        { :id => "1", :name => "Item 1" },
+                        { :id => "2", :name => "Item 2" },
+                     ]
+                  },
                   :networks => [
                     { :id => "31",
                       :href => "#{base_url}/network/31",
@@ -367,9 +373,11 @@ module Fog
 
       def vdc_from_uri(uri)
         match = Regexp.new(%r:.*/vdc/(\d+):).match(uri.to_s)
-        if match
-          mock_data[:organizations].map { |org| org[:vdcs] }.flatten.detect { |vdc| vdc[:id] == match[1] }
-        end
+        match && vdc_from_id(match[1])
+      end
+
+      def vdc_from_id(id)
+        mock_data[:organizations].map { |org| org[:vdcs] }.flatten.detect { |vdc| vdc[:id] == id }
       end
 
       def ip_from_uri(uri)

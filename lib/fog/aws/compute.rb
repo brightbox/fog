@@ -19,6 +19,8 @@ module Fog
       collection  :servers
       model       :snapshot
       collection  :snapshots
+      model       :tag
+      collection  :tags
       model       :volume
       collection  :volumes
 
@@ -29,14 +31,16 @@ module Fog
       request :associate_address
       request :attach_volume
       request :authorize_security_group_ingress
+      request :create_image
       request :create_key_pair
       request :create_security_group
       request :create_snapshot
-      request :create_image
+      request :create_tags
       request :create_volume
       request :delete_key_pair
       request :delete_security_group
       request :delete_snapshot
+      request :delete_tags
       request :delete_volume
       request :deregister_image
       request :describe_addresses
@@ -48,6 +52,7 @@ module Fog
       request :describe_regions
       request :describe_security_groups
       request :describe_snapshots
+      request :describe_tags
       request :describe_volumes
       request :detach_volume
       request :disassociate_address
@@ -69,10 +74,11 @@ module Fog
         def self.data
           @data ||= Hash.new do |hash, region|
             owner_id = Fog::AWS::Mock.owner_id
-            hash[region] = Hash.new do |hash, key|
-              hash[key] = {
+            hash[region] = Hash.new do |region_hash, key|
+              region_hash[key] = {
                 :deleted_at => {},
                 :addresses  => {},
+                :images     => {},
                 :instances  => {},
                 :key_pairs  => {},
                 :limits     => { :addresses => 5 },
@@ -108,7 +114,8 @@ module Fog
                   }
                 },
                 :snapshots => {},
-                :volumes => {}
+                :volumes => {},
+                :tags => {}
               }
             end
           end
@@ -153,8 +160,15 @@ module Fog
           @aws_access_key_id      = options[:aws_access_key_id]
           @aws_secret_access_key  = options[:aws_secret_access_key]
           @hmac = Fog::HMAC.new('sha256', @aws_secret_access_key)
-          options[:region] ||= 'us-east-1'
-          @host = options[:host] || case options[:region]
+          if @endpoint = options[:endpoint]
+            endpoint = URI.parse(@endpoint)
+            @host = endpoint.host
+            @path = endpoint.path
+            @port = endpoint.port
+            @scheme = endpoint.scheme
+          else
+            options[:region] ||= 'us-east-1'
+            @host = options[:host] || case options[:region]
             when 'ap-southeast-1'
               'ec2.ap-southeast-1.amazonaws.com'
             when 'eu-west-1'
@@ -166,9 +180,11 @@ module Fog
             else
               raise ArgumentError, "Unknown region: #{options[:region].inspect}"
             end
-          @port   = options[:port]      || 443
-          @scheme = options[:scheme]    || 'https'
-          @connection = Fog::Connection.new("#{@scheme}://#{@host}:#{@port}", options[:persistent])
+            @path   = options[:path]      || '/'
+            @port   = options[:port]      || 443
+            @scheme = options[:scheme]    || 'https'
+          end
+          @connection = Fog::Connection.new("#{@scheme}://#{@host}:#{@port}#{@path}", options[:persistent])
         end
 
         def reload
@@ -187,6 +203,7 @@ module Fog
               :aws_access_key_id  => @aws_access_key_id,
               :hmac               => @hmac,
               :host               => @host,
+              :path               => @path,
               :version            => '2010-08-31'
             }
           )

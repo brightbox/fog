@@ -1,4 +1,4 @@
-require 'fog/model'
+require 'fog/core/model'
 
 module Fog
   module Local
@@ -8,7 +8,7 @@ module Fog
 
         identity  :key,             :aliases => 'Key'
 
-        attr_accessor :body
+        attr_writer :body
         attribute :content_length,  :aliases => 'Content-Length'
         # attribute :content_type,    :aliases => 'Content-Type'
         attribute :last_modified,   :aliases => 'Last-Modified'

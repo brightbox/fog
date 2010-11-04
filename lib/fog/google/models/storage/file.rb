@@ -1,4 +1,4 @@
-require 'fog/model'
+require 'fog/core/model'
 
 module Fog
   module Google
@@ -8,7 +8,7 @@ module Fog
 
         identity  :key,             :aliases => 'Key'
 
-        attr_accessor :body
+        attr_writer :body
         attribute :content_length,  :aliases => 'Content-Length'
         attribute :content_type,    :aliases => 'Content-Type'
         attribute :etag,            :aliases => ['Etag', 'ETag']
@@ -53,6 +53,7 @@ module Fog
           true
         end
 
+        remove_method :owner=
         def owner=(new_owner)
           if new_owner
             @owner = {

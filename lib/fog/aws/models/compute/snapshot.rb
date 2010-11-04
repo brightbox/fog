@@ -1,4 +1,4 @@
-require 'fog/model'
+require 'fog/core/model'
 
 module Fog
   module AWS
@@ -15,6 +15,7 @@ module Fog
         attribute :created_at,  :aliases => 'startTime'
         attribute :owner_id,    :aliases => 'ownerId'
         attribute :state,       :aliases => 'status'
+        attribute :tags,        :aliases => 'tagSet'
         attribute :volume_id,   :aliases => 'volumeId'
         attribute :volume_size, :aliases => 'volumeSize'
 
@@ -30,6 +31,7 @@ module Fog
         end
 
         def save
+          raise Fog::Errors::Error.new('Resaving an existing object may create a duplicate') if identity
           requires :volume_id
 
           data = connection.create_snapshot(@volume_id, @description).body
@@ -40,7 +42,6 @@ module Fog
 
         def volume
           requires :id
-
           connection.describe_volumes(@volume_id)
         end
 

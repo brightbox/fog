@@ -17,22 +17,14 @@ $LOAD_PATH.unshift __DIR__ unless
   $LOAD_PATH.include?(__DIR__) ||
   $LOAD_PATH.include?(File.expand_path(__DIR__))
 
-require 'fog/attributes'
-require 'fog/collection'
-require 'fog/connection'
-require 'fog/deprecation'
-require 'fog/errors'
-require 'fog/hmac'
-require 'fog/model'
-require 'fog/parser'
-require 'fog/provider'
-require 'fog/service'
-require 'fog/ssh'
+require 'fog/core'
 
 module Fog
 
+  @mocking = false
+
   unless const_defined?(:VERSION)
-    VERSION = '0.3.7'
+    VERSION = '0.3.8'
   end
 
   module Mock

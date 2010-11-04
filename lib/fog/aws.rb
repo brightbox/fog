@@ -22,6 +22,19 @@ module Fog
       params
     end
 
+    def self.indexed_filters(filters)
+      params = {}
+      filters.keys.each_with_index do |key, key_index|
+        key_index += 1
+        params[format('Filter.%d.Name', key_index)] = key
+        [*filters[key]].each_with_index do |value, value_index|
+          value_index += 1
+          params[format('Filter.%d.Value.%d', key_index, value_index)] = value
+        end
+      end
+      params
+    end
+
     def self.signed_params(params, options = {})
       params.merge!({
         'AWSAccessKeyId'    => options[:aws_access_key_id],
@@ -37,7 +50,7 @@ module Fog
           body << "#{key}=#{CGI.escape(value.to_s).gsub(/\+/, '%20')}&"
         end
       end
-      string_to_sign = "POST\n#{options[:host]}\n/\n" << body.chop
+      string_to_sign = "POST\n#{options[:host]}\n#{options[:path]}\n" << body.chop
       signed_string = options[:hmac].sign(string_to_sign)
       body << "Signature=#{CGI.escape(Base64.encode64(signed_string).chomp!).gsub(/\+/, '%20')}"
 
@@ -98,10 +111,6 @@ module Fog
           fingerprint << hex(2)
         end
         fingerprint.join(':')
-      end
-
-      def self.image_id
-        "ami-#{hex(8)}"
       end
 
       def self.instance_id

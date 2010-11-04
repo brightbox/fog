@@ -13,29 +13,24 @@ Shindo.tests('AWS::Compute | image requests', ['aws']) do
       'kernelId'        => String,
       'productCodes'    => [],
       'ramdiskId'       => String,
-      'rootDeviceType'  => String
+      'rootDeviceType'  => String,
+      'tagSet'          => {}
     }],
       'requestId'     => String,
   }
 
   tests('success') do
 
-    # the result for this is HUGE an relatively uninteresting...de
+    # the result for this is HUGE and relatively uninteresting...
     # tests("#describe_images").formats(@images_format) do
     #   AWS[:compute].describe_images.body
     # end
 
     tests("#describe_images('ImageId' => '#{GENTOO_AMI}')").formats(@images_format) do
+      pending if Fog.mocking?
       AWS[:compute].describe_images('ImageId' => GENTOO_AMI).body
     end
 
-  end
-
-  tests('failure') do
-
-    tests("#describe_images('ImageId' => 'ami-00000000')").raises(Fog::AWS::Compute::Error) do
-      AWS[:compute].describe_regions('ImageId' => 'ami-00000000')
-    end
   end
 
 end

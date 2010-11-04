@@ -1,4 +1,4 @@
-require 'fog/collection'
+require 'fog/core/collection'
 require 'fog/google/models/storage/file'
 
 module Fog
@@ -79,12 +79,6 @@ module Fog
         def new(attributes = {})
           requires :directory
           super({ :directory => directory }.merge!(attributes))
-        end
-
-        private
-
-        def directory=(new_directory)
-          @directory = new_directory
         end
 
       end

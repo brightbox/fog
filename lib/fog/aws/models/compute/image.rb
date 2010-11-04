@@ -1,4 +1,4 @@
-require 'fog/model'
+require 'fog/core/model'
 
 module Fog
   module AWS
@@ -21,6 +21,7 @@ module Fog
         attribute :ramdisk_id,            :aliases => 'ramdiskId'
         attribute :root_device_type,      :aliases => 'rootDeviceType'
         attribute :root_device_name,      :aliases => 'rootDeviceName'
+        attribute :tags,                  :aliases => 'tagSet'
 
         def deregister(delete_snapshot = false)
           connection.deregister_image(@id)

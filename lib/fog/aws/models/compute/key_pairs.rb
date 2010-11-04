@@ -1,4 +1,4 @@
-require 'fog/collection'
+require 'fog/core/collection'
 require 'fog/aws/models/compute/key_pair'
 
 module Fog
@@ -12,22 +12,24 @@ module Fog
         model Fog::AWS::Compute::KeyPair
 
         def initialize(attributes)
-          @key_name ||= []
+          @filters ||= {}
           super
         end
 
-        def all(key_name = @key_name)
-          @key_name = key_name
-          data = connection.describe_key_pairs(key_name).body
+        def all(filters = @filters)
+          unless filters.is_a?(Hash)
+            Formatador.display_line("[yellow][WARN] all with #{filters.class} param is deprecated, use all('key-name' => []) instead[/] [light_black](#{caller.first})[/]")
+            filters = {'key-name' => [*filters]}
+          end
+          @filters = filters
+          data = connection.describe_key_pairs(filters).body
           load(data['keySet'])
         end
 
         def get(key_name)
           if key_name
-            all(key_name).first
+            self.class.new(:connection => connection).all('key-name' => key_name).first
           end
-        rescue Fog::Errors::NotFound
-          nil
         end
 
       end

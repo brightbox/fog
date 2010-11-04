@@ -1,4 +1,4 @@
-require 'fog/model'
+require 'fog/core/model'
 
 module Fog
   module AWS
@@ -12,6 +12,7 @@ module Fog
         attribute :ami_launch_index,      :aliases => 'amiLaunchIndex'
         attribute :availability_zone,     :aliases => 'availabilityZone'
         attribute :block_device_mapping,  :aliases => 'blockDeviceMapping'
+        attribute :client_token,          :aliases => 'clientToken'
         attribute :dns_name,              :aliases => 'dnsName'
         attribute :groups
         attribute :flavor_id,             :aliases => 'instanceType'
@@ -29,10 +30,12 @@ module Fog
         attribute :root_device_name,      :aliases => 'rootDeviceName'
         attribute :root_device_type,      :aliases => 'rootDeviceType'
         attribute :state,                 :aliases => 'instanceState'
+        attribute :state_reason,          :aliases => 'stateReason'
         attribute :subnet_id,             :aliases => 'subnetId'
+        attribute :tags,                  :aliases => 'tagSet'
         attribute :user_data
 
-        attr_accessor :password, :username
+        attr_accessor :password
         attr_writer   :private_key, :private_key_path, :public_key, :public_key_path
 
         def initialize(attributes={})
@@ -60,6 +63,7 @@ module Fog
           true
         end
 
+        remove_method :flavor_id
         def flavor_id
           @flavor && @flavor.id || @flavor_id
         end
@@ -82,6 +86,7 @@ module Fog
           @key_name = new_keypair && new_keypair.name
         end
 
+        remove_method :monitoring=
         def monitoring=(new_monitoring)
           if new_monitoring.is_a?(Hash)
             @monitoring = new_monitoring['state']
@@ -124,10 +129,12 @@ module Fog
         end
 
         def save
+          raise Fog::Errors::Error.new('Resaving an existing object may create a duplicate') if identity
           requires :image_id
 
           options = {
             'BlockDeviceMapping'          => block_device_mapping,
+            'ClientToken'                 => client_token,
             'InstanceType'                => flavor_id,
             'KernelId'                    => kernel_id,
             'KeyName'                     => key_name,
@@ -191,12 +198,12 @@ module Fog
 
         def volumes
           requires :id
-
           connection.volumes(:server => self)
         end
 
         private
 
+        remove_method :state=
         def state=(new_state)
           if new_state.is_a?(Hash)
             @state = new_state['name']

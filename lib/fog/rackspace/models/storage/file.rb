@@ -1,4 +1,4 @@
-require 'fog/model'
+require 'fog/core/model'
 
 module Fog
   module Rackspace
@@ -8,7 +8,7 @@ module Fog
 
         identity  :key,             :aliases => 'Key'
 
-        attr_accessor :body
+        attr_writer :body
         attribute :content_length,  :aliases => 'Content-Length'
         attribute :content_type,    :aliases => 'Content-Type'
         attribute :etag,            :aliases => 'Etag'
@@ -41,9 +41,9 @@ module Fog
           end
         end
 
-        def save
+        def save(options = {})
           requires :body, :directory, :key
-          data = connection.put_object(directory.name, @key, @body)
+          data = connection.put_object(directory.name, @key, @body, options)
           @etag = data.headers['ETag']
           true
         end

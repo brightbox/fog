@@ -13,7 +13,7 @@ Shindo.tests('AWS::Compute | snapshot requests', ['aws']) do
 
   @snapshots_format = {
     'requestId'   => String,
-    'snapshotSet' => [@snapshot_format]
+    'snapshotSet' => [@snapshot_format.merge('tagSet' => {})]
   }
 
   @volume = AWS[:compute].volumes.create(:availability_zone => 'us-east-1a', :size => 1)
@@ -28,14 +28,15 @@ Shindo.tests('AWS::Compute | snapshot requests', ['aws']) do
       data
     end
 
+    Fog.wait_for { AWS[:compute].snapshots.get(@snapshot_id) }
     AWS[:compute].snapshots.get(@snapshot_id).wait_for { ready? }
 
     tests("#describe_snapshots").formats(@snapshots_format) do
       AWS[:compute].describe_snapshots.body
     end
 
-    tests("#describe_snapshots('#{@snapshot_id}')").formats(@snapshots_format) do
-      AWS[:compute].describe_snapshots(@snapshot_id).body
+    tests("#describe_snapshots('snapshot-id' => '#{@snapshot_id}')").formats(@snapshots_format) do
+      AWS[:compute].describe_snapshots('snapshot-id' => @snapshot_id).body
     end
 
     tests("#delete_snapshots(#{@snapshot_id})").formats(AWS::Compute::Formats::BASIC) do
@@ -44,10 +45,6 @@ Shindo.tests('AWS::Compute | snapshot requests', ['aws']) do
 
   end
   tests ('failure') do
-
-    tests("#describe_snapshot('snap-00000000')").raises(Fog::AWS::Compute::NotFound) do
-      AWS[:compute].describe_snapshots('snap-00000000')
-    end
 
     tests("#delete_snapshot('snap-00000000')").raises(Fog::AWS::Compute::NotFound) do
       AWS[:compute].delete_snapshot('snap-00000000')

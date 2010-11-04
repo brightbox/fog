@@ -1,4 +1,4 @@
-require 'fog/model'
+require 'fog/core/model'
 
 module Fog
   module Bluebox
@@ -15,14 +15,15 @@ module Fog
 
         identity :id
 
-        attribute :memory
-        attribute :storage
-        attribute :hostname
         attribute :cpu
-        attribute :ips
-        attribute :status
+        attribute :description
         attribute :flavor_id
+        attribute :hostname
         attribute :image_id
+        attribute :ips
+        attribute :memory
+        attribute :status
+        attribute :storage
         attribute :template
 
         attr_accessor :password
@@ -76,6 +77,7 @@ module Fog
         end
 
         def save
+          raise Fog::Errors::Error.new('Resaving an existing object may create a duplicate') if identity
           requires :flavor_id, :image_id
           options = if !password && !public_key
             raise(ArgumentError, "password or public_key is required for this operation")
