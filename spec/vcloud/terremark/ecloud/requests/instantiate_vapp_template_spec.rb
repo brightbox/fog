@@ -9,6 +9,7 @@ if Fog.mocking?
     describe "#instantiate_vapp_template" do
       let(:vdc) { @vcloud.vdcs.first }
       let(:catalog_item) { vdc.catalog.first }
+      let(:catalog_item_data) { @vcloud.catalog_item_and_vdc_from_catalog_item_uri(catalog_item.href).first }
       let(:new_vapp_data) do
         {
           :name => "foobar",
@@ -20,6 +21,7 @@ if Fog.mocking?
           :vdc_uri => vdc.href
         }
       end
+      let(:added_mock_data) { @vcloud.vdc_from_uri(vdc.href)[:vms].last }
 
       context "with a valid data" do
         let(:template_instantiation) { @vcloud.instantiate_vapp_template(catalog_item.href, new_vapp_data) }
@@ -33,12 +35,23 @@ if Fog.mocking?
         end
 
         describe "added mock data" do
-          subject { template_instantiation; @vcloud.vdc_from_uri(vdc.href)[:vms].last }
+          subject { template_instantiation; added_mock_data }
 
           it { should include :id }
           it { should include :href }
+          it { should include :disks }
+          it { should include :ip }
+          its(:status) { should == 2 }
+
+          its(:disks) { should == catalog_item_data[:disks] }
 
           specify { subject.values_at(*new_vapp_data.keys).should == new_vapp_data.values }
+        end
+
+        describe "server based on added mock data" do
+          subject { template_instantiation; vdc.servers.reload.detect {|s| s.href == added_mock_data[:href] }.reload }
+
+          its(:name) { should == new_vapp_data[:name] }
         end
 
         describe "#body" do
