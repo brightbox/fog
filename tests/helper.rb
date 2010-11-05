@@ -1,5 +1,5 @@
-require 'fog'
-require 'fog/core/bin'
+require 'brightbox-fog'
+require 'brightbox-fog/core/bin'
 Fog.bin = true
 
 __DIR__ = File.dirname(__FILE__)

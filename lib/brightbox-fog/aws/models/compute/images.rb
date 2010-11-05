@@ -1,0 +1,34 @@
+require 'brightbox-fog/core/collection'
+require 'brightbox-fog/aws/models/compute/image'
+
+module Fog
+  module AWS
+    class Compute
+
+      class Images < Fog::Collection
+
+        attribute :filters
+
+        model Fog::AWS::Compute::Image
+
+        def initialize(attributes)
+          @filters ||= {}
+          super
+        end
+
+        def all(filters = @filters)
+          @filters = filters
+          data = connection.describe_images(@filters).body
+          load(data['imagesSet'])
+        end
+
+        def get(image_id)
+          if image_id
+            self.class.new(:connection => connection).all('image-id' => image_id).first
+          end
+        end
+      end
+
+    end
+  end
+end

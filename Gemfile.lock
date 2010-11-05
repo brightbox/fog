@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    fog (0.3.16)
+    brightbox-fog (0.3.16)
       builder
       excon (>= 0.2.4)
       formatador (>= 0.0.15)
@@ -34,9 +34,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  brightbox-fog!
   builder
   excon (>= 0.2.4)
-  fog!
   formatador (>= 0.0.15)
   json
   mime-types

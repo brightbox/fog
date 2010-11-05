@@ -6,7 +6,7 @@ unless defined?(GENTOO_AMI)
 end
 
 require 'rubygems'
-require 'fog'
+require 'brightbox-fog'
 
 @bluebox_api_key = "CHANGEME"
 @aws_access_key_id = "CHANGEME"

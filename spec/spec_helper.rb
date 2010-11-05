@@ -1,9 +1,9 @@
 require 'spec'
 require 'open-uri'
-require 'fog'
+require 'brightbox-fog'
 Fog.bin = true
-require 'fog/core/bin'
-require 'fog/vcloud/bin'
+require 'brightbox-fog/core/bin'
+require 'brightbox-fog/vcloud/bin'
 
 if ENV["FOG_MOCK"] == "true"
   Fog.mock!
