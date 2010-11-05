@@ -2,7 +2,16 @@ require 'fog'
 require 'fog/core/bin'
 Fog.bin = true
 
-require File.expand_path(File.join(File.dirname(__FILE__), 'helpers', 'model_helper'))
+__DIR__ = File.dirname(__FILE__)
+
+$LOAD_PATH.unshift __DIR__ unless
+  $LOAD_PATH.include?(__DIR__) ||
+  $LOAD_PATH.include?(File.expand_path(__DIR__))
+
+require 'tests/helpers/storage/directory_tests'
+require 'tests/helpers/storage/directories_tests'
+require 'tests/helpers/storage/file_tests'
+require 'tests/helpers/storage/files_tests'
 
 if ENV["FOG_MOCK"] == "true"
   Fog.mock!
